@@ -11,9 +11,10 @@ int prime(int a){
 }
 
 int main() {
-    int n; 
+    int n=67; 
     printf("nhap so: "); scanf("%d", &n);
     if(prime(n)==1){printf("%d la so prime", n);}
     else{printf("%d ko la so prime", n);}
     return 0;
+
 }
