@@ -1,1 +1,1 @@
-Tong hop cac bai tap C co ban toi da tung lam
+Tổng hợp các bài tập C tôi từng làm.
