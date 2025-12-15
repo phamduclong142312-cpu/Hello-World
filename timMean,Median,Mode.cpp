@@ -1,33 +1,27 @@
 #include <stdio.h>
-
-float mean(int n, int a[]){
-    int sum = 0;
+float MEAN(int n, int a[]){
+    float sum = 0;
     for(int i=0; i<n; i++){
         sum += a[i];
     }
-    return (float)sum/n;
+    return sum/n;
 }
 
-float median(int n, int a[]){
-    if(n%2!=0){
-       return a[(n-1)/2];
-    }
-    else{
-        return (float)(a[(n-1)/2]+a[(((n-1)+1)/2)])/(float)2;
-    }
+float MEDIAN(int n, int a[]){
+    if(n%2!=0) return a[(n-1)/2];
+    else return (a[(n-1)/2] + a[n/2]) / (float)2 ;
 }
 
 int MODE(int n, int a[]){
     int mode = 0;
-    int MaxF = 0;
-    
+    int MaxFre = 0;
     for(int i=0; i<n; i++){
-        int Fre=0;
+        int fre = 0;
         for(int j=0; j<n; j++){
-            if(a[j]==a[i]){Fre+=1;}
+            if(a[i]==a[j]) fre += 1;
         }
-        if(Fre>MaxF){
-            MaxF = Fre;
+        if(fre > MaxFre){
+            MaxFre = fre;
             mode = a[i];
         }
     }
@@ -36,30 +30,27 @@ int MODE(int n, int a[]){
 
 void sort(int n, int a[]){
     for(int i=0; i<n; i++){
-        for(int j=0;j<n-1;j++){
-            int temp;
-            if(a[j]>a[j+1]){
-                temp = a[j];
-                a[j] = a[j+1];
-                a[j+1] = temp;
+        for(int j=i+1; j<n; j++){
+            if(a[i]>a[j]){
+                int temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
             }
         }
     }
     for(int i=0; i<n; i++){
-        printf("%d ",a[i]);
+        printf("%d ", a[i]);
     }
 }
 
 int main() {
-    int n;
-    scanf("%d",&n);
+    int n; scanf("%d",&n);
     int a[n];
     for(int i=0; i<n; i++){
-        scanf("%d",&a[i]);
+        scanf("%d", &a[i]);
     }
     sort(n,a);
-    printf("\nMean = %f",mean(n,a));
-    printf("\nMedian = %f",median(n,a));
-    printf("\nMode = %d",MODE(n,a));
-    return 0;
+    printf("\nMean = %f", MEAN(n,a));
+    printf("\nMedian = %f", MEDIAN(n,a));
+    printf("\nMode = %d", MODE(n,a));
 }
