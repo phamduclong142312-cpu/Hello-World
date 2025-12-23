@@ -1,1 +1,1 @@
-Tổng hợp các bài tập C tôi từng làm.
+Tổng hợp các bài tập C/C++ tôi từng làm.
