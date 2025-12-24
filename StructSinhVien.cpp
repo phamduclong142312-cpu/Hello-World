@@ -31,7 +31,7 @@ void Sort(int n, SV a[]){
 }
 
 void MaxGPA(int n, SV a[]){
-    float Max = 0; int pos = 0;
+    float Max = -1; int pos = 0;
     for(int i=0; i<n; i++){
         if(a[i].GPA > Max){
             Max = a[i].GPA;
