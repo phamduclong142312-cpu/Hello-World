@@ -28,10 +28,23 @@ typedef struct SinhVien SV;
 void nhapSV(SV *p){
     printf("Nhap MSSV: "); scanf("%s",p->MSSV);
     getchar();
-    printf("Nhap ho ten: "); gets(p->hoten);
+
+    printf("Nhap ho ten: ");
+    fgets(p->hoten, sizeof(p->hoten), stdin);
+    p->hoten[strcspn(p->hoten, "\n")] = '\0';
+
     printf("Nhap tuoi: "); scanf("%d",&p->tuoi);
-    printf("Nhap GPA: "); scanf("%f",&p->GPA);
+    do{printf("Nhap GPA: "); scanf("%f",&p->GPA);}
+    while(p->GPA < 0 || p->GPA > 4);
     printf("Nhap ngay thang nam sinh: "); nhapNS(&p->ngaysinh);
+}
+
+void PhanLoai(SV a){
+    if (a.GPA < 2.0) printf("Yeu");
+    else if (a.GPA < 2.5) printf("Trung binh");
+    else if (a.GPA < 3.2) printf("Kha");
+    else if (a.GPA < 3.6) printf("Gioi");
+    else printf("Xuat sac");
 }
 
 void XuatSV(SV p){
@@ -39,8 +52,29 @@ void XuatSV(SV p){
     printf("Ho va ten: %s\n", p.hoten);
     printf("Tuoi: %d\n", p.tuoi);
     printf("GPA: %f\n",p. GPA);
+    printf("Diem theo thang 10: %.2f\n", p.GPA * 2.5);
+    printf("Xep loai: "); PhanLoai(p); printf("\n");
     XuatNs(p.ngaysinh);
     printf("\n\n");
+}
+
+void ThongKe(int n, SV a[]){
+    int XS =0, Gioi = 0, Kha = 0, Tb = 0, Yeu = 0;
+    for(int i=0; i<n; i++){
+        if(a[i].GPA < 2) Yeu+=1 ;
+        else if(a[i].GPA < 2.5) Tb+=1 ;
+        else if(a[i].GPA < 3.2) Kha+=1 ;
+        else if(a[i].GPA < 3.6) Gioi+=1 ;
+        else XS+=1 ;
+    }
+    printf("\n");
+    printf("----------THONG KE SINH VIEN THEO XEP LOAI----------\n");
+    printf("So sinh vien loai Xuat sac: %d\n",XS);
+    printf("So sinh vien loai Gioi: %d\n",Gioi);
+    printf("So sinh vien loai Kha: %d\n",Kha);
+    printf("So sinh vien loai Trung binh: %d\n",Tb);
+    printf("So sinh vien loai Yeu: %d\n",Yeu);
+    printf("\n");
 }
 
 void Menu(){
@@ -50,8 +84,17 @@ void Menu(){
     printf("3. Tim sinh vien co GPA cao nhat\n");
     printf("4. Sap xep sinh vien theo GPA\n");
     printf("5. Tim kiem sinh vien theo MSSV\n");
-    printf("6. Thoat\n");
+    printf("6. Thong ke so luong sinh vien theo xep loai\n");
+    printf("7. Xuat bang du lieu sinh vien\n");
+    printf("8. Thoat\n");
     printf("=======================================\n");
+}
+
+void BangSV(int n, SV a[]){
+    printf("|%-5s| %-12s| %-25s| %-5s|\n", "STT", "MSSV", "Ho va ten", "GPA");
+    for(int i=0; i<n; i++){
+        printf("|%-5d| %-12s| %-25s| %-5.2f|\n",i+1,a[i].MSSV,a[i].hoten,a[i].GPA);
+    }
 }
 
 void MaxGPA(int n, SV a[]){
@@ -92,13 +135,14 @@ void SortTang(int n, SV a[]){
 }
 
 int main(){
-    int n; SV a[10]; int choice;
+    int n; SV a[100]; int choice;
     do{
         Menu();
         printf("Nhap lua chon cua ban: "); scanf("%d",&choice);
         switch(choice){
             case 1:
-                printf("Nhap so luong sinh vien: "); scanf("%d",&n);
+                do{printf("Nhap so luong sinh vien: "); scanf("%d",&n);}
+                while(n<=0);
                 for(int i=0; i<n; i++){
                     nhapSV(&a[i]);
                 }
@@ -150,13 +194,19 @@ int main(){
             }
                 break;
             case 6:
+                ThongKe(n,a);
+                break;
+            case 7:
+                BangSV(n,a);
+                break;
+            case 8:
                 printf("Xin chao va hen gap lai!\n");
                 break;
             default:
                 printf("Lua chon khong hop le!\n");
         }
     }
-    while(choice != 6);
+    while(choice != 8);
 
 
     return 0;
