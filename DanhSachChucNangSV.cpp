@@ -79,14 +79,18 @@ void ThongKe(int n, SV a[]){
 
 void Menu(){
     printf("==========DANH SACH CHUC NANG==========\n");
-    printf("1. Nhap mang sinh vien\n");
-    printf("2. Xuat mang sinh vien\n");
-    printf("3. Tim sinh vien co GPA cao nhat\n");
-    printf("4. Sap xep sinh vien theo GPA\n");
-    printf("5. Tim kiem sinh vien theo MSSV\n");
-    printf("6. Thong ke so luong sinh vien theo xep loai\n");
-    printf("7. Xuat bang du lieu sinh vien\n");
-    printf("8. Thoat\n");
+    printf("1. Nhap mang sinh vien.\n");
+    printf("2. Xuat mang sinh vien.\n");
+    printf("3. Tim sinh vien co GPA cao nhat.\n");
+    printf("4. Sap xep sinh vien theo GPA.\n");
+    printf("5. Tim kiem sinh vien theo MSSV.\n");
+    printf("6. Thong ke so luong sinh vien theo xep loai.\n");
+    printf("7. Xuat bang du lieu sinh vien.\n");
+    printf("8. Them sinh vien.\n");
+    printf("9. Sua sinh vien.\n");
+    printf("10. Loc sinh vien theo khoang GPA.\n");
+    printf("11. In ra danh sach cac sinh vien bi canh bao hoc vu.\n");
+    printf("12. Thoat.\n");
     printf("=======================================\n");
 }
 
@@ -132,6 +136,90 @@ void SortTang(int n, SV a[]){
             }
         }
     }
+}
+
+void themSV(SV a[], int *n){
+    nhapSV(&a[*n]);
+    (*n)++;
+    printf("Them sinh vien thanh cong.\n");
+}
+
+void suaSV(SV a[], int *n){
+    char mssv[20];
+    int Chon;
+    printf("Nhap MSSV can sua: "); scanf("%s",mssv);
+    for(int i=0; i<*n; i++){
+        if(strcmp(a[i].MSSV,mssv)==0){
+            do{
+            printf("Nhap thong tin can sua: \n");
+            printf("1.Cap nhat MSSV.\n");
+            printf("2.Cap nhat ho va ten.\n");
+            printf("3.Cap nhat tuoi.\n");
+            printf("4.Cap nhat GPA.\n");
+            printf("5.Cap nhat ngay thang nam sinh.\n");
+            printf("6.Thoat.\n");
+            printf("Nhap lua chon cua ban: "); scanf("%d",&Chon);
+
+            switch(Chon){
+                case 1:
+                    printf("Nhap MSSV moi: "); scanf("%s",a[i].MSSV);
+                    break;
+                case 2:
+                    printf("Cap nhat ho ten moi: "); 
+                    getchar();
+                    fgets(a[i].hoten, sizeof(a[i].hoten), stdin);
+                    a[i].hoten[strcspn(a[i].hoten, "\n")] = '\0';
+                    break;
+                case 3:
+                    printf("Nhap tuoi moi: ");
+                    scanf("%d",&a[i].tuoi);
+                    break;
+                case 4:
+                    do{printf("Nhap GPA moi: "); scanf("%f",&a[i].GPA);}
+                    while(a[i].GPA < 0 || a[i].GPA > 4);
+                    break;
+                case 5:
+                    printf("Nhap ngay sinh moi: "); nhapNS(&a[i].ngaysinh);
+                    break;
+                case 6:
+                    printf("Cap nhat thanh cong.\n");
+                    break;
+                default:
+                    printf("lua chon khong hop le!\n");
+
+                }
+            }
+            while(Chon != 6);
+            return;}
+    }
+    printf("Khong tim thay sinh vien can sua.\n");
+}
+
+void LocSV(SV a[],int n){
+    float MinGPA, MaxGPA;
+    do{printf("Nhap khoang loc: ");
+    scanf("%f %f",&MinGPA, &MaxGPA);}
+    while((MinGPA<0 || MinGPA>4)||(MaxGPA<0 || MaxGPA>4)||(MinGPA>MaxGPA));
+    printf("Cac sinh vien thuoc khoang GPA tu %.2f - %.2f\n", MinGPA, MaxGPA);
+    for(int i=0; i<n; i++){
+        if(a[i].GPA>=MinGPA && a[i].GPA<=MaxGPA){
+            XuatSV(a[i]);
+        }
+    }
+}
+
+void CanhCao(SV a[], int n){
+    printf("Danh sach sinh vien bi canh bao hoc vu (GPA<2.0).\n");
+    printf("------------------------------------------------------------\n");
+    printf("|%-5s| %-12s| %-25s| %-5s|\n", "STT", "MSSV", "Ho va ten", "GPA");
+    int Q=0;
+    for(int i=0; i<n; i++){
+        if(a[i].GPA<2)
+        {Q+=1;
+        printf("|%-5d| %-12s| %-25s| %-5.2f|\n",Q,a[i].MSSV,a[i].hoten,a[i].GPA);}
+        
+    }
+    if(Q==0) printf("Khong co sinh vien nao bi canh cao hoc vu.\n");
 }
 
 int main(){
@@ -200,13 +288,25 @@ int main(){
                 BangSV(n,a);
                 break;
             case 8:
+                themSV(a, &n);
+                break;
+            case 9:
+                suaSV(a,&n);
+                break;
+            case 10:
+                LocSV(a,n);
+                break;
+            case 11:
+                CanhCao(a,n);
+                break;
+            case 12:
                 printf("Xin chao va hen gap lai!\n");
                 break;
             default:
                 printf("Lua chon khong hop le!\n");
         }
     }
-    while(choice != 8);
+    while(choice != 12);
 
 
     return 0;
