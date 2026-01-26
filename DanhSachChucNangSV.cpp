@@ -51,7 +51,7 @@ void XuatSV(SV p){
     printf("MSSV: %s\n", p.MSSV);
     printf("Ho va ten: %s\n", p.hoten);
     printf("Tuoi: %d\n", p.tuoi);
-    printf("GPA: %f\n",p. GPA);
+    printf("GPA: %.2f\n",p. GPA);
     printf("Diem theo thang 10: %.2f\n", p.GPA * 2.5);
     printf("Xep loai: "); PhanLoai(p); printf("\n");
     XuatNs(p.ngaysinh);
@@ -90,7 +90,8 @@ void Menu(){
     printf("9. Sua sinh vien.\n");
     printf("10. Loc sinh vien theo khoang GPA.\n");
     printf("11. In ra danh sach cac sinh vien bi canh bao hoc vu.\n");
-    printf("12. Thoat.\n");
+    printf("12. Xoa sinh vien theo MSSV.\n");
+    printf("13. Thoat.\n");
     printf("=======================================\n");
 }
 
@@ -222,6 +223,23 @@ void CanhCao(SV a[], int n){
     if(Q==0) printf("Khong co sinh vien nao bi canh cao hoc vu.\n");
 }
 
+void XoaSV(int *n, SV a[]){
+    char SSV[20];
+  
+    printf("Nhap MSSV can xoa: "); scanf("%s",SSV);
+    for(int i=0; i<*n; i++){
+        if(strcmp(SSV,a[i].MSSV)==0){
+            for(int j=i; j<*n-1; j++){
+                a[j]= a[j+1];
+            }
+            (*n)--;
+            printf("Xoa sinh vien thanh cong\n");
+            return;
+        }
+    }
+    printf("Khong tim thay sinh vien!\n");
+}
+
 int main(){
     int n; SV a[100]; int choice;
     do{
@@ -232,7 +250,9 @@ int main(){
                 do{printf("Nhap so luong sinh vien: "); scanf("%d",&n);}
                 while(n<=0);
                 for(int i=0; i<n; i++){
+                    printf("Nhap thong tin sinh vien thu %d:\n",i+1);
                     nhapSV(&a[i]);
+                    printf("\n");
                 }
                 break;
             case 2:
@@ -300,13 +320,16 @@ int main(){
                 CanhCao(a,n);
                 break;
             case 12:
+                XoaSV(&n,a);
+                break;
+            case 13:
                 printf("Xin chao va hen gap lai!\n");
                 break;
             default:
                 printf("Lua chon khong hop le!\n");
         }
     }
-    while(choice != 12);
+    while(choice != 13);
 
 
     return 0;
