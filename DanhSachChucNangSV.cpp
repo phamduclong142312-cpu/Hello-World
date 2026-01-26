@@ -1,6 +1,6 @@
-#include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 struct ngay{
     int ngay;
     int thang;
@@ -13,7 +13,7 @@ void nhapNS(NS *p){
 }
 
 void XuatNs(NS a){
-    printf("Sinh vao %d/%d/%d", a.ngay, a.thang, a.nam);
+    printf("Sinh vao %d/%d/%d \n", a.ngay, a.thang, a.nam);
 }
 
 struct SinhVien{
@@ -22,6 +22,7 @@ struct SinhVien{
     int tuoi;
     float GPA;
     NS ngaysinh;
+    int sex;
 };
 typedef struct SinhVien SV;
 
@@ -37,24 +38,34 @@ void nhapSV(SV *p){
     do{printf("Nhap GPA: "); scanf("%f",&p->GPA);}
     while(p->GPA < 0 || p->GPA > 4);
     printf("Nhap ngay thang nam sinh: "); nhapNS(&p->ngaysinh);
+
+    printf("1.Nam 2.Nu 3.LGBTQ+\n");
+    do{printf("Nhap gioi tinh (1-3): "); scanf("%d",&p->sex);}
+    while(p->sex < 1 || p->sex > 3 );
+    
 }
 
-void PhanLoai(SV a){
-    if (a.GPA < 2.0) printf("Yeu");
-    else if (a.GPA < 2.5) printf("Trung binh");
-    else if (a.GPA < 3.2) printf("Kha");
-    else if (a.GPA < 3.6) printf("Gioi");
-    else printf("Xuat sac");
+const char* PhanLoai(SV a){
+    if (a.GPA < 2.0) return "Yeu";
+    else if (a.GPA < 2.5) return "Trung binh";
+    else if (a.GPA < 3.2) return "Kha";
+    else if (a.GPA < 3.6) return "Gioi";
+    else return "Xuat sac";
 }
 
 void XuatSV(SV p){
     printf("MSSV: %s\n", p.MSSV);
     printf("Ho va ten: %s\n", p.hoten);
     printf("Tuoi: %d\n", p.tuoi);
-    printf("GPA: %.2f\n",p. GPA);
+    printf("GPA: %.2f\n",p.GPA);
     printf("Diem theo thang 10: %.2f\n", p.GPA * 2.5);
-    printf("Xep loai: "); PhanLoai(p); printf("\n");
+    printf("Xep loai: %s\n", PhanLoai(p));
     XuatNs(p.ngaysinh);
+    printf("Gioi tinh: ");
+    if(p.sex==1) printf("Nam\n");
+    else if(p.sex==2) printf("Nu\n");
+    else if(p.sex==3) printf("LGBTQ+");
+    else printf("Khong xac dinh\n");
     printf("\n\n");
 }
 
@@ -91,7 +102,8 @@ void Menu(){
     printf("10. Loc sinh vien theo khoang GPA.\n");
     printf("11. In ra danh sach cac sinh vien bi canh bao hoc vu.\n");
     printf("12. Xoa sinh vien theo MSSV.\n");
-    printf("13. Thoat.\n");
+    printf("13. Xuat sinh vien theo gioi tinh.\n");
+    printf("14. Thoat.\n");
     printf("=======================================\n");
 }
 
@@ -240,8 +252,19 @@ void XoaSV(int *n, SV a[]){
     printf("Khong tim thay sinh vien!\n");
 }
 
+void xuatgt(int decision, int n ,SV a[]){
+    int found = 0;
+    for(int i=0; i<n; i++){
+        if(a[i].sex == decision) XuatSV(a[i]);
+        found = 1;
+    }
+    if(found == 0 ) printf("Khong co sinh vien nao thuoc gioi tinh nay\n");
+}
+
 int main(){
-    int n; SV a[100]; int choice;
+    int n = 0; 
+    SV *a = NULL; 
+    int choice;
     do{
         Menu();
         printf("Nhap lua chon cua ban: "); scanf("%d",&choice);
@@ -249,6 +272,13 @@ int main(){
             case 1:
                 do{printf("Nhap so luong sinh vien: "); scanf("%d",&n);}
                 while(n<=0);
+
+                a = (SV*)malloc(n * sizeof(SV));
+                if(a==NULL){
+                    printf("Khong du bo nho de cap phat!\n");
+                    exit(1);
+                }
+
                 for(int i=0; i<n; i++){
                     printf("Nhap thong tin sinh vien thu %d:\n",i+1);
                     nhapSV(&a[i]);
@@ -323,14 +353,26 @@ int main(){
                 XoaSV(&n,a);
                 break;
             case 13:
+                int gt;
+                printf("=====Chon gioi tinh can xuat=====\n");
+                printf("1.Dan ong\n");
+                printf("2.Phu nu\n");
+                printf("3.Cong dong LGBT\n");
+                printf("=================================\n");
+                do{printf("Nhap lua chon cua ban: "); scanf("%d",&gt);}
+                while(gt<1 || gt>3);
+
+                xuatgt(gt,n,a);
+                break;
+            case 14:
                 printf("Xin chao va hen gap lai!\n");
                 break;
             default:
                 printf("Lua chon khong hop le!\n");
         }
     }
-    while(choice != 13);
+    while(choice != 14);
 
-
+    free(a);
     return 0;
 }
